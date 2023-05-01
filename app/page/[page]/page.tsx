@@ -1,22 +1,24 @@
+import Pagination from "@/app/component/Pagination";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Pagination from "./component/Pagination";
 
-type Props = {};
-
-async function getData() {
+type Props = {
+  params: {
+    page: string;
+  };
+};
+async function getData(page: string) {
   const res = await fetch(
-    "https://api.themoviedb.org/3/trending/movie/week?api_key=5dc598a77b29f87b5779374195722103&page=1"
+    `https://api.themoviedb.org/3/trending/movie/week?api_key=5dc598a77b29f87b5779374195722103&page=${page}`
   );
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
   return res.json();
 }
-
-async function HomePage({}: Props) {
-  const data = await getData();
+async function PaginationPage({ params: { page } }: Props) {
+  const data = await getData(page);
   return (
     <>
       <ul className="grid items-center justify-around gap-2 border-2 p-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-6 ">
@@ -61,4 +63,4 @@ async function HomePage({}: Props) {
   );
 }
 
-export default HomePage;
+export default PaginationPage;
