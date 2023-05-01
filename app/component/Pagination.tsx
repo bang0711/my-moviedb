@@ -7,13 +7,15 @@ type Props = {};
 
 function Pagination({}: Props) {
   const [currentPage, setCurrentPage] = useState(() => {
-    const storedPage = parseInt(localStorage.getItem("currentPage") || "1");
-    return Number.isNaN(storedPage) ? 1 : storedPage;
+    if (typeof window !== "undefined") {
+      const storedPage = parseInt(localStorage.getItem("currentPage") || "1");
+      return Number.isNaN(storedPage) ? 1 : storedPage;
+    }
+    return 1;
   });
 
   const router = useRouter();
   const params = useParams();
-  console.log(params.page);
   function handlePageClick(data: any) {
     if (data.selected === undefined) {
       return;
@@ -25,7 +27,6 @@ function Pagination({}: Props) {
   }
 
   const totalPages = Math.ceil(10000 / 20);
-  const width = window.innerWidth;
   return (
     <div className="px-2 py-4">
       <ReactPaginate
@@ -64,7 +65,7 @@ function Pagination({}: Props) {
         }
         breakLabel={"..."}
         pageCount={totalPages}
-        pageRangeDisplayed={width < 640 ? 3 : 5}
+        pageRangeDisplayed={5}
         activeClassName={`${
           Object.keys(params).length === 0
             ? ""
